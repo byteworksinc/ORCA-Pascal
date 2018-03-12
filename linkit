@@ -1,1 +1,7 @@
-set list        obj/pascal obj/call obj/parser obj/native obj/cgi obj/symbolsset list {list} obj/scanner obj/dag obj/cgc obj/gen obj/objout obj/pcommonecho link {parameters} {list} keep=obj/pascallink {parameters} {list} keep=obj/pascalecho filetype obj/pascal exe $DB01filetype obj/pascal exe $DB01
+set list        obj/pascal obj/call obj/parser obj/native obj/cgi obj/symbols
+set list {list} obj/scanner obj/dag obj/cgc obj/gen obj/objout obj/pcommon
+
+echo link {parameters} {list} keep=obj/pascal
+link {parameters} {list} keep=obj/pascal
+echo filetype obj/pascal exe $DB01
+filetype obj/pascal exe $DB01

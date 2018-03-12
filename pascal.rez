@@ -1,1 +1,14 @@
-#include "types.rez"resource rVersion(1) {   {      2,				/* Major revision */      2,				/* Minor revision */      0,				/* Bug version */      release,				/* Release stage */      0,				/* Non-final release # */      },   verUS,				/* Region code */   "ORCA/Pascal",			/* Short version number */   "Copyright 1996, Byte Works, Inc."	/* Long version number */   };
+#include "types.rez"
+
+resource rVersion(1) {
+   {
+      2,				/* Major revision */
+      2,				/* Minor revision */
+      0,				/* Bug version */
+      release,				/* Release stage */
+      0,				/* Non-final release # */
+      },
+   verUS,				/* Region code */
+   "ORCA/Pascal",			/* Short version number */
+   "Copyright 1996, Byte Works, Inc."	/* Long version number */
+   };
