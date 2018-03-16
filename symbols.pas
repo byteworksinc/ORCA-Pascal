@@ -799,7 +799,7 @@ var
       tp1^.next := tpList;
       tpList := tp1;
       tp1^.tp := tp;
-      tp1^.disp := symLength;
+      tp1^.disp := symLength - 12;
       end; {else}
    end; {GetTypeDisp}
 
@@ -1059,6 +1059,7 @@ var
       if sym^.idtype <> nil then
          if sym^.idtype^.form in
             [scalar,subrange,pointerStruct,arrays,records,objects] then begin
+            symLength := symLength+12;  {update length of symbol table}
 	    WriteName(sym);		{write the name field}
 	    WriteAddress(sym);		{write the address field}
 	    case sym^.idtype^.form of
@@ -1086,7 +1087,6 @@ var
                         	   end; {else}
                         	end;
                end; {case}
-	    symLength := symLength+12;	{update length of symbol table}
             end; {if}
 
    if sym^.rlink <> nil then
