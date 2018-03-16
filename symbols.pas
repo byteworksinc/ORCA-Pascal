@@ -991,10 +991,10 @@ var
          CnOut2(count);
          end; {else if}
       while count <> 0 do begin		{write the subscript entries}
-         CnOut2(0); CnOut2(0);
-         GetBounds(tp, lmin, lmax);
+         GetBounds(tp^.inxtype, lmin, lmax);
          CnOut2(long(lmin).lsw); CnOut2(long(lmin).msw);
          CnOut2(long(lmax).lsw); CnOut2(long(lmax).msw);
+         CnOut2(0); CnOut2(0);
          symLength := symLength+12;
          tp := tp^.aeltype;
          count := count-1;
