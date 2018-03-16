@@ -170,6 +170,7 @@ var
    codeGeneration: boolean;		{is code generation on?}
    commonSubexpression: boolean; 	{do common subexpression removal?}
    debugFlag: boolean;			{generate debugger calls?}
+   debugStrFlag: boolean;               {gsbug/niftylist debug names?}
    floatCard: integer;			{0 -> SANE; 1 -> FPE}
    floatSlot: integer;			{FPE slot}
    isDynamic: boolean;			{are segments dynamic?}
@@ -686,6 +687,7 @@ stringSize := 0; 			{no strings, yet}
 rangeCheck := false;			{don't generate range checks}
 profileFlag := false;			{don't generate profiling code}
 debugFlag := false;			{don't generate debug code}
+debugStrFlag := false;                  {don't generate gsbug debug strings}
 traceBack := false;			{don't generate traceback code}
 
 registers := cLineOptimize;		{don't do register optimizations}

@@ -694,6 +694,7 @@ var
    debugFlag := odd(val);
    profileFlag := (val & $0002) <> 0;
    profileFlag := profileFlag or debugFlag;
+   debugStrFlag := (val & $8000) <> 0;
    end; {DoDebug}
 
 
