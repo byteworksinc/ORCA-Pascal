@@ -132,6 +132,7 @@ type
                          objname: pstringptr;	{object name}
                          objlevel: integer;	{generation level}
                          objparent: stp;	{parent or nil}
+                         objdef: boolean;       {false if not defined}
                          );
 	 files:		(filtype: stp; filsize: addrrange);
 	 tagfld: 	(tagfieldp: ctp; fstvar: stp);
