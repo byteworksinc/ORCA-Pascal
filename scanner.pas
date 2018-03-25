@@ -287,6 +287,7 @@ with ffDCBGS do begin			{read the source file}
    action := 0;
    flags := $C000;
    pathName := @fNameGS.theString;
+   option := nil;
    end; {with}
 FastFileGS(ffDCBGS);
 if ToolError <> 0 then begin
@@ -360,6 +361,7 @@ ffRec.pcount := 14;			{read the file}
 ffRec.action := 0;
 ffRec.flags := $C000;
 ffRec.pathName := @usesFileNameGS.theString;
+ffRec.option := nil;
 FastFileGS(ffRec);
 if ToolError <> 0 then
    TermError(6, nil);
