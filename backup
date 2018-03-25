@@ -1,1 +1,29 @@
-if "{#}" != "1"   echo Form: backup [day]   exit 65535endset dest /library/mike/{1}/pascalset list        make linkit count backup smac pascal.notesset list {list} pascal.pas pascal.rezset list {list} parser.passet list {list} call.passet list {list} symbols.pas symbols.asm symbols.macrosset list {list} pcommon.pas pcommon.asm pcommon.macrosset list {list} scanner.pas scanner.asm scanner.macrosset list {list} cgi.pas cgi.comments cgi.asmset list {list} native.pas native.asm native.macrosset list {list} objout.pas objout.asm objout.macrosset list {list} dag.pas dag.asm dag.macrosset list {list} cgc.pas cgc.asm cgc.macrosset list {list} gen.pasunset exitcreate {dest} >.null >&.nullfor i in {list}   newer {dest}/{i} {i}   if {Status} != 0      copy -c {i} {dest}/{i}   endend
+if "{#}" != "1"
+   echo Form: backup [day]
+   exit 65535
+end
+
+set dest /library/mike/{1}/pascal
+
+set list        make linkit count backup smac pascal.notes
+set list {list} pascal.pas pascal.rez
+set list {list} parser.pas
+set list {list} call.pas
+set list {list} symbols.pas symbols.asm symbols.macros
+set list {list} pcommon.pas pcommon.asm pcommon.macros
+set list {list} scanner.pas scanner.asm scanner.macros
+set list {list} cgi.pas cgi.comments cgi.asm
+set list {list} native.pas native.asm native.macros
+set list {list} objout.pas objout.asm objout.macros
+set list {list} dag.pas dag.asm dag.macros
+set list {list} cgc.pas cgc.asm cgc.macros
+set list {list} gen.pas
+
+unset exit
+create {dest} >.null >&.null
+for i in {list}
+   newer {dest}/{i} {i}
+   if {Status} != 0
+      copy -c {i} {dest}/{i}
+   end
+end
