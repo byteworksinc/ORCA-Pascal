@@ -693,6 +693,7 @@ var
    val := GetInteger;
    debugFlag := odd(val);
    profileFlag := (val & $0002) <> 0;
+   profileFlag := profileFlag or debugFlag;
    end; {DoDebug}
 
 
