@@ -47,6 +47,7 @@ var
    fwptr: ctp;				{head of chain for forw decl type ids}
    inptr,outptr,erroroutputptr: ctp;	{standard I/O}
    dummyString: stp;			{index entry for string constants}
+   dummyField: ctp;
 
 {---------------------------------------------------------------}
 
@@ -744,6 +745,21 @@ with dummyString^ do begin
    min := 1;
    max := 2;
    end; {with}
+
+
+dummyField := pointer(Malloc(sizeof(identifier))); 
+with dummyField^ do begin
+   name := @'FIELD';
+   idtype := intptr;
+   next := nil;
+   fldaddr := 0;
+   klass := field;
+   hasIFile := false;
+   llink := nil;
+   rlink := nil;
+   fldaddr := 0;
+   end; {with}
+
 end; {EnterUndecl}
  
 
@@ -954,6 +970,7 @@ var
          ip := tp^.fstfld
       else
          ip := tp^.objfld;
+      if ip = nil then ip := dummyField;
       GenSymbol(ip, true);
       end; {ExpandRecordType}
 
