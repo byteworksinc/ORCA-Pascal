@@ -1003,6 +1003,7 @@ end; {DoConstant}
           objlevel := 1;
           objparent := nil;
 	  size := ptrsize;
+          hasSFile := false;
 	  end; {with}
 
         {handle inheritance}
