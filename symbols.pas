@@ -986,22 +986,34 @@ var
          count: unsigned;		{# of subscripts}
          lmin, lmax: addrrange;		{index range}
          tp2: stp;			{used to trace array type list}
+         tp3: stp;
 
       begin {WriteArrays}
       count := 0;			{count the subscripts}
       tp2 := tp;
+      tp3 := nil;
       while tp2^.form = arrays do begin
          count := count+1;
+         tp3 := tp2;
          tp2 := tp2^.aeltype;
          end; {while}
-      if tp2^.form = scalar then	{write the type code}
-         if GetType(tp2, tp^.isPacked) in [cgByte,cgUByte] then begin
-            count := count-1;
-            CnOut(6);
-            CnOut2(count);
+
+      if tp2^.form = scalar then begin	{write the type code}
+         { cstring = packed array[1..x] of char }
+         { pstring = packed array[0..x] of char }
+         if (boolean(tp2^.isPacked)) and (tp2 = charptr) then begin
+           GetBounds(tp3^.inxtype, lmin, lmax);
+            if (lmin = 0) or (lmin = 1) then begin 
+               count := count-1;
+               { 6 = cstring, 7 = pstring }
+               CnOut(7 - ord(lmin));
+               CnOut2(count);
+               end {if}
+            else WriteScalarType(tp2, 0, count);
             end {if}
          else
-            WriteScalarType(tp2, 0, count)
+            WriteScalarType(tp2, 0, count);
+         end {if}
       else if tp2^.form = subrange then
          WriteScalarType(tp2^.rangetype, 0, count)
       else if tp2^.form = pointerStruct then
