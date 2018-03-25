@@ -753,6 +753,9 @@ procedure GenSymbols {sym: ctp; doGlobals: integer};
 {								}
 { Notes: Defined as extern in Native.pas			}
 
+const
+   noDisp = -1;                         {disp returned by GetTypeDisp if the type was not found}
+
 type
    tpPtr = ^tpRecord;			{type list displacements}
    tpRecord = record
@@ -794,7 +797,7 @@ var
    if tp2 <> nil then            
       GetTypeDisp := tp2^.disp		{return disp to entry}
    else begin
-      GetTypeDisp := 0;			{no entry}
+      GetTypeDisp := noDisp;			{no entry}
       new(tp1);				{create a new entry}
       tp1^.next := tpList;
       tpList := tp1;
@@ -1033,7 +1036,7 @@ var
                records,
                objects:		begin
 				disp := GetTypeDisp(tp^.eltype);
-                                if disp = 0 then begin
+                                if disp = noDisp then begin
                                    if tp^.eltype^.form = records then
         		   	      CnOut(12)
                                    else
@@ -1072,7 +1075,7 @@ var
                records,
                objects:		begin
 				disp := GetTypeDisp(sym^.idtype);
-                        	if disp = 0 then begin
+                        	if disp = noDisp then begin
                                    if sym^.idtype^.form = records then
         			      CnOut(12)
                                    else
