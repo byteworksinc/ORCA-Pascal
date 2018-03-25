@@ -40,7 +40,7 @@ dv3      asl   ans                      roll up the next number
          rol   ans+6
          sec                            subtract for this digit
          lda   ans+4
-         sbc   num1
+         sbc   num2
          tax
          lda   ans+6
          sbc   num2+2
@@ -117,7 +117,7 @@ dv3      asl   ans                      roll up the next number
          rol   ans+6
          sec                            subtract for this digit
          lda   ans+4
-         sbc   num1
+         sbc   num2
          tax
          lda   ans+6
          sbc   num2+2
