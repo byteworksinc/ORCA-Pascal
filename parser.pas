@@ -4356,7 +4356,8 @@ end; {DoConstant}
     Gen0(dc_pin)
   else {imbeded procedure}
     Gen1(dc_lab, fprocp^.pfname);
-  Gen0(pc_ent);				{create a stack frame}
+  Gen1Name(pc_ent, 0, fprocp^.name); {create a stack frame}
+
   ResetTemp;				{forget old temporary variables}
 
   lcp := fprocp^.pfparms;		{generate code for passed parameters}
