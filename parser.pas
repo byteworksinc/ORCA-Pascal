@@ -117,7 +117,8 @@ var
   objectcp: ctp;			{last procedure or function identifier}
   objectName: pString;			{object name (for methods)}
   objectType: stp;			{type of method's object}
-  
+  objptr: ctp;                          {linked list of objects}
+
 					{structured constants:}
 					{---------------------}
  
@@ -356,7 +357,7 @@ end; {DoConstant}
       Duplicate(ncp^.llink, ocp^.llink);
       Duplicate(ncp^.rlink, ocp^.rlink);
       end; {if}
-    end; {Dulpicate}
+    end; {Duplicate}
 
 
     procedure SimpleType (fsys:setofsys; var fsp:stp; var fsize:addrrange);
@@ -979,80 +980,113 @@ end; {DoConstant}
         if not isType then
           Error(127);
 
-        {set up a new display}
-	oldtop := top;
-	if top < displimit then begin
-	  top := top+1;
-	  with display[top] do begin
-	    fname := nil;
-	    flabel := nil;
-	    labsused := nil;
-	    occur := rec;
+        { check for previous foward declaration }
+        lsp := nil;
+        lcp := objptr;
+        while (lcp <> nil) and (CompNames(objectName, lcp^.name^) <> 0)
+	  do lcp := lcp^.next;
+
+        if lcp <> nil then lsp := lcp^.idtype;
+        if (sy <> semicolon) and (lsp <> nil) and (lsp^.objdef) then lsp := nil;
+
+        if lsp = nil then begin
+          {set up the type}
+          lsp := pointer(Malloc(sizeof(structure)));
+            with lsp^ do begin
+	    form := objects;
+            objname := nil;
+            objsize := 6;
+            objlevel := 1;
+            objparent := nil;
+            objdef := true;
+	    size := ptrsize;
+            hasSFile := false;
+      	    end; {with}
+        end;
+
+	{ handle forward declaration }
+        if sy = semicolon then begin
+            { if lcp is defined, then we're already inserted, nothing to do}
+            if lcp = nil then begin
+              lsp^.objdef := false;
+              objectcp^.idtype := lsp;
+              EnterId(objectcp);
+              objectcp^.next := objptr;
+   	      objptr := objectcp;
+           end;       
+        end else begin
+          
+          {set up a new display}
+	  oldtop := top;
+	  if top < displimit then begin
+	    top := top+1;
+	    with display[top] do begin
+	      fname := nil;
+	      flabel := nil;
+	      labsused := nil;
+	      occur := rec;
+	      end
 	    end
-	  end
-	else
-          Error(107);
-	disp1 := 6;
+	  else
+            Error(107);
+	  disp1 := 6;
+ 	
 
-        {set up the type}
-        lsp := pointer(Malloc(sizeof(structure)));
-	with lsp^ do begin
-	  form := objects;
-          objname := nil;
-          objsize := 6;
-          objlevel := 1;
-          objparent := nil;
-	  size := ptrsize;
-          hasSFile := false;
-	  end; {with}
-
-        {handle inheritance}
-        if sy = lparent then begin
-          InSymbol;
-          if sy = ident then begin
-            SearchId([types], lcp2);
-            if lcp2 <> nil then begin
-              if lcp2^.idtype <> nil then
-                if lcp2^.idtype^.form = objects then begin
-                  Duplicate(display[top].fname, lcp2^.idtype^.objfld);
-                  disp1 := lcp2^.idtype^.objsize;
-                  lsp^.objparent := lcp2^.idtype;
-                  lsp^.objlevel := lcp2^.idtype^.objlevel + 1;
-                  end {if}
-                else
-                  Error(129);
+          {handle inheritance}
+          if sy = lparent then begin
+            InSymbol;
+            if sy = ident then begin
+              SearchId([types], lcp2);
+              if lcp2 <> nil then begin
+                if lcp2^.idtype <> nil then
+                  if (lcp2^.idtype^.form = objects) and (lcp2^.idtype^.objdef)
+                  then begin
+                    Duplicate(display[top].fname, lcp2^.idtype^.objfld);
+                    disp1 := lcp2^.idtype^.objsize;
+                    lsp^.objparent := lcp2^.idtype;
+                    lsp^.objlevel := lcp2^.idtype^.objlevel + 1;
+                    end {if}
+                  else
+                    Error(129);
+                end {if}
+              else
+                Error(33);
+              InSymbol;
               end {if}
             else
-              Error(33);
-            InSymbol;
-            end {if}
-          else
-            Error(128);
-          Match(rparent,4);
-          end; {if}
+              Error(128);
+            Match(rparent,4);
+            end; {if}
 
-        {compile the fields and methods}
-        if sy in typebegsys then
-	  FieldList(fsys-[semicolon]+[endsy,procsy,funcsy], lsp1,
-            lsp^.hasSFile, true);
-        objectType := lsp;
-        ttop := top;
-        top := oldtop;
-        EnterId(objectcp);
-        top := ttop;
-        objectcp^.idtype := lsp;
-        ProcList(fsys-[semicolon]+[endsy]);
-        if disp1 > $010000 then
-          if SmallMemoryModel then
-            Error(122);
-	lsp^.objfld := display[top].fname;
-        lsp^.objsize := disp1;
+          {compile the fields and methods}
+          if sy in typebegsys then
+       	    FieldList(fsys-[semicolon]+[endsy,procsy,funcsy], lsp1,
+              lsp^.hasSFile, true);
+          objectType := lsp;
+          if lsp^.objdef then begin
+            ttop := top;
+            top := oldtop;
+            objectcp^.idtype := lsp;
+            EnterId(objectcp);
+            objectcp^.next := objptr;
+   	    objptr := objectcp;
+            top := ttop;
+          end;
+          lsp^.objdef := true;
 
-	lsp^.ispacked := ispacked;
-	ExportUses;
-	top := oldtop;
-	Match(endsy,13);
-	end {else if}
+          ProcList(fsys-[semicolon]+[endsy]);
+          if disp1 > $010000 then
+            if SmallMemoryModel then
+              Error(122);
+   	  lsp^.objfld := display[top].fname;
+          lsp^.objsize := disp1;
+
+	  lsp^.ispacked := ispacked;
+	  ExportUses;
+	  top := oldtop;
+  	  Match(endsy,13);
+        end; {if not forward declaration}
+      end {else if}
 {set} else if sy = setsy then begin
 	InSymbol;
 	Match(ofsy,8);
@@ -1268,7 +1302,7 @@ end; {DoConstant}
     else
       Error(16);
     objectName := lcp^.name^;
-    objectCp := lcp;
+    objectcp := lcp;
     Typ(fsys+[semicolon], lsp, lsize, true); {get the type}
     if lsp^.form = objects then
       lsp^.objname := lcp^.name;
@@ -5021,6 +5055,7 @@ end; {DoConstant}
   code := pointer(Calloc(sizeof(intermediate_code)));
   {code^.lab := nil;}
   fwptr := nil;
+  objptr := nil;
   fextfilep := nil;
   thisType := nil;			{not declaring a type}
   tempList := nil; 			{no temp variables}
