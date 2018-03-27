@@ -1281,7 +1281,7 @@ if gattr.typtr <> nil then
           lsp := eltype^.recvar;
 	end; {if}
       end {if}
-    else if (form = objects) and (objdef) then begin
+    else if (form = objects) and objdef then begin
       lsize := objsize;
       ofld := objfld;
       end {else if}
