@@ -835,6 +835,7 @@ var
 
    var
       disp: integer;			{disp to symbol of same type}
+      idtype: stp;
 
 
       procedure WriteAddress (sym: ctp);
@@ -1087,31 +1088,40 @@ var
    if sym^.llink <> nil then
       GenSymbol(sym^.llink, false);
 
-   if sym^.klass in [varsm,field] then
-      if sym^.idtype <> nil then
-         if sym^.idtype^.form in
+   if sym^.klass in [varsm,field] then begin
+      idtype := sym^.idtype;
+      if idtype <> nil then
+         if idtype^.form in
             [scalar,subrange,pointerStruct,arrays,records,objects] then begin
             symLength := symLength+12;  {update length of symbol table}
 	    WriteName(sym);		{write the name field}
 	    WriteAddress(sym);		{write the address field}
-	    case sym^.idtype^.form of
-               scalar:		WriteScalarType(sym^.idtype, 0, 0);
-               subrange:	WriteScalarType(sym^.idtype^.rangetype, 0, 0);
+
+            if (sym^.klass = varsm) and (sym^.vkind = formal) then begin
+               { add an extra pointer to var parameters. }
+               new(idtype);
+               idtype^.form := pointerStruct;
+               idtype^.eltype := sym^.idtype;
+               end;
+
+	    case idtype^.form of
+               scalar:		WriteScalarType(idtype, 0, 0);
+               subrange:	WriteScalarType(idtype^.rangetype, 0, 0);
                pointerStruct:	begin
-         			WritePointerType(sym^.idtype, 0);
-                        	ExpandPointerType(sym^.idtype);
+         			WritePointerType(idtype, 0);
+                        	ExpandPointerType(idtype);
                         	end;
-               arrays:		WriteArrays(sym^.idtype);
+               arrays:		WriteArrays(idtype);
                records,
                objects:		begin
-				disp := GetTypeDisp(sym^.idtype);
+				disp := GetTypeDisp(idtype);
                         	if disp = noDisp then begin
-                                   if sym^.idtype^.form = records then
+                                   if idtype^.form = records then
         			      CnOut(12)
                                    else
         			      CnOut(14);
         			   CnOut2(0);
-                        	   ExpandRecordType(sym^.idtype);
+                        	   ExpandRecordType(idtype);
                         	   end {if}
                         	else begin
         			   CnOut(13);
@@ -1119,7 +1129,9 @@ var
                         	   end; {else}
                         	end;
                end; {case}
+            if idtype <> sym^.idtype then dispose(idtype);
             end; {if}
+      end; {if}
 
    if sym^.rlink <> nil then
       GenSymbol(sym^.rlink, maybeLast);
