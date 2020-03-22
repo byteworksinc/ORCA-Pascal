@@ -1085,6 +1085,7 @@ sop	dc	i1'0,xor,0,0,0,0,band,0'
 nrw	dc	i'2,1,2,3,2,3,1,0,5,0'	number of reserved words starting with
 	dc	i'0,1,1,2,4,3,0,2,2,3'	 each letter of the alphabet
 	dc	i'4,1,2,0,0,0'
+	dc	i'0,0,0,0,0'		[\]^_ (_ is an allowed identifier prefix)
 arw	dc	a'rwa,rwb,rwc,rwd,rwe'	address of first reserved word for each
 	dc	a'rwf,rwg,rwh,rwi,rwj'	 letter of the alphabet
 	dc	a'rwk,rwl,rwm,rwn,rwo'
