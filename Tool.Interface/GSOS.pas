@@ -335,8 +335,8 @@ type
       fileType: integer;
       auxType: longint;
       nullField1: integer;       {set this field to zero}
-      createDateTime: longint;
-      modDateTome: longint;
+      createDateTime: timeField;
+      modDateTime: timeField;
       optionList: optionListPtr;
       nullField2: longint;       {set this field to zero}
       nullField3: longint;       {set this field to zero}
