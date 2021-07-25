@@ -1,0 +1,13 @@
+set list        Common ACE ControlMgr DeskMgr DeskTopBus DialogMgr EventMgr
+set list {list} Finder QuickDrawII FontMgr GSOS HyperStudio HyperXCMD
+set list {list} IntegerMath LineEdit ListMgr MemoryMgr MenuMgr MIDI MIDISynth
+set list {list} MscToolSet MultiMedia ObjIntf ORCAShell PrintMgr ProDOS
+set list {list} ResourceMgr Scheduler ScrapMgr Sequencer SFToolSet SoundMgr
+set list {list} Synthesizer TextEdit TextToolSet ToolLocator WindowMgr 
+
+for i in {list}
+   echo Processing {i}
+   compile +t +e {i}.pas
+   copy -c {i}.int  2/orcapascaldefs/
+   delete {i}.int {i}.a
+end
