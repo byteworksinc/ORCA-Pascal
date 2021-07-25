@@ -66,7 +66,7 @@ type
    gsosInString = record
        size:  integer;
       {Change the array size as needed for your application}
-       theString:  packed array [1..254] of char;
+       theString:  packed array [1..508] of char;
        end;
    gsosInStringPtr = ^gsosInString;
 
