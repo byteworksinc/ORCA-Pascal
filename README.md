@@ -1,7 +1,7 @@
 # ORCA-Pascal
 Apple IIGS ORCA/Pascal Compiler, an ISO Pascal compiler for the 65816 with libraries for the Apple IIGS
 
-__See the release page for any releases past the base release [releases page][releases]. The full compiler and development envirnment are available as part of the Opus ][ collection sold by Juiced.GS.__
+__See the release page for any releases past the base release [releases page][releases]. The full compiler and development envirnment are available as part of the [Opus \]\[](https://juiced.gs/store/opus-ii-software/) collection sold by Juiced.GS.__
 
 [releases]: https://github.com/byteworksinc/ORCA-Pascal/releases
 
