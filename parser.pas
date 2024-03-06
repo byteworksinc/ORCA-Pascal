@@ -3737,7 +3737,7 @@ end; {DoConstant}
     Gen1(dc_lab, lcix);
     if fstptr <> nil then begin		{if there are labels...}
       lmin := fstptr^.cslab;
-      if (lmax - lmin) div lcount > sparse then begin
+      if (ord4(lmax) - lmin) div lcount > sparse then begin
 
         {use if-else for sparse case statements}
         while fstptr <> nil do begin
